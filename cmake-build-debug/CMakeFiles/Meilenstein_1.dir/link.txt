@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/Meilenstein_1.dir/main.c.o CMakeFiles/Meilenstein_1.dir/keyValStore.c.o  -o Meilenstein_1 
