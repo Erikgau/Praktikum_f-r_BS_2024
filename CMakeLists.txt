@@ -3,4 +3,4 @@ project(Meilenstein_1 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Meilenstein_1 main.c keyValStore.h keyValStore.c)
+add_executable(untitled10 main.c keyValStore.h keyValStore.c sub.c sub.h main.h)
