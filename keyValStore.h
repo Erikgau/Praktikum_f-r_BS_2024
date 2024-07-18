@@ -1,22 +1,50 @@
-//
-// Created by Erik on 09.05.2024.
-//
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include "begandsub.h"
 
-#ifndef MEILENSTEIN_1_KEYVALSTORE_H
-#define MEILENSTEIN_1_KEYVALSTORE_H
+#ifndef MEILENSTEIN3FRFR_KEYVALSTORE_H
+#define MEILENSTEIN3FRFR_KEYVALSTORE_H
 
-#define BUFFER_SIZE 1024
+#define MAP_SIZE 100
+#define KEY_SIZE 128
+#define VALUE_SIZE 128
+#define MSG_PUT_TYPE 11
+#define MSG_SIZE 128
 
-struct KeyValue {
-    char key[256];
-    char value[256];
+struct KeyValuePair {
+    char key[KEY_SIZE];
+    char value[VALUE_SIZE];
 };
 
-extern struct KeyValue keyValueStore[100];
-extern int numKeyValues;
+typedef struct {
+    struct KeyValuePair table[MAP_SIZE];
+} Storage;
 
-int put(char* key, char* value);
-int get(char* key, char* res);
-int del(char* key);
+Storage * SharedMemoryMap();
 
-#endif //MEILENSTEIN_1_KEYVALSTORE_H
+void put_key(Storage* map, const char* key, const char* value);
+
+const char* get_key(Storage* map, const char* key);
+
+void del_key(Storage* map, const char* key);
+
+// Struktur für die Nachricht
+struct msg_buffer {
+    long msg_type;
+    char msg_text[MSG_SIZE];
+};
+
+int messageQueueCreate();
+
+int messageSendToAllPUT(int own_msg_q_id, int * msg_q_ids, char*key, char*value);
+
+char* receiveMessageContent(int msg_q_id, SubscriptionArray * sub_list);
+
+void splitMessage(const char *message, char **key, char **value);
+
+#endif //MEILENSTEIN3FRFR_KEYVALSTORE_H
